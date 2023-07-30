@@ -6,12 +6,14 @@ from django.shortcuts import redirect
 
 # Create your views here.
 def homepage(request):
+    return render(request,'index.html',{})
+def dashboard(request):
     context={}
     data=FoodIteams.objects.all()
     chefs=ChefDetails.objects.all()
     context['data']=data
     context['chefs']=chefs
-    return render(request,'index.html',context)
+    return render(request,'dashboard.html',context)
 
 def registration(request):
     if request.method=='POST':
@@ -42,7 +44,7 @@ def registration(request):
             print("Wrong Password")
             messages.error(request,"Wrong Password")
             return redirect('/registration/')
-        return redirect('/')
+        return redirect('/login/')
     return render(request,"registration.html",{})
 
 def login(request):
@@ -52,10 +54,10 @@ def login(request):
         user=auth.authenticate(username=username,password=password)
         if user is not None:
             auth.login(request,user)
-            return redirect('/homepage/')
+            return redirect('/dashboard/')
         else:
             messages.error(request,'Invalid Credential')
-            return redirect('/')
+            return redirect('/login/')
     return render(request,"login.html",{})
 
 def logout(request):
